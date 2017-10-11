@@ -231,7 +231,7 @@ def prompt_for_update(freshen, update_auto):
 
     if not os.path.isfile(hosts_file):
         try:
-            open(hosts_file, "w+").close()
+            open(hosts_file, "w+", encoding="utf-8").close()
         except (IOError, OSError):
             # Starting in Python 3.3, IOError is aliased
             # OSError. However, we have to catch both for
@@ -510,7 +510,7 @@ def update_sources_data(sources_data, **sources_params):
 
     for source in recursive_glob(sources_params["datapath"],
                                  source_data_filename):
-        update_file = open(source, "r")
+        update_file = open(source, "r", encoding="utf-8")
         update_data = json.load(update_file)
         sources_data.append(update_data)
         update_file.close()
@@ -520,7 +520,7 @@ def update_sources_data(sources_data, **sources_params):
             sources_params["extensionspath"], source)
         for update_file_path in recursive_glob(source_dir,
                                                source_data_filename):
-            update_file = open(update_file_path, "r")
+            update_file = open(update_file_path, "r", encoding="utf-8")
             update_data = json.load(update_file)
 
             sources_data.append(update_data)
@@ -548,7 +548,9 @@ def update_all_sources(source_data_filename, host_filename):
     all_sources = recursive_glob("*", source_data_filename)
 
     for source in all_sources:
-        update_file = open(source, "r")
+        update_file = open(source, "r", encoding="utf-8")
+        # debug
+        print("== debug == filename = '{}'".format(update_file))
         update_data = json.load(update_file)
         update_url = update_data["url"]
         update_file.close()
@@ -583,18 +585,18 @@ def create_initial_file():
     # spin the sources for the base file
     for source in recursive_glob(settings["datapath"],
                                  settings["hostfilename"]):
-        with open(source, "r") as curFile:
+        with open(source, "r", encoding="utf-8") as curFile:
             write_data(merge_file, curFile.read())
 
     # spin the sources for extensions to the base file
     for source in settings["extensions"]:
         for filename in recursive_glob(path_join_robust(
                 settings["extensionspath"], source), settings["hostfilename"]):
-            with open(filename, "r") as curFile:
+            with open(filename, "r", encoding="utf-8") as curFile:
                 write_data(merge_file, curFile.read())
 
     if os.path.isfile(settings["blacklistfile"]):
-        with open(settings["blacklistfile"], "r") as curFile:
+        with open(settings["blacklistfile"], "r", encoding="utf-8") as curFile:
             write_data(merge_file, curFile.read())
 
     return merge_file
@@ -617,7 +619,7 @@ def remove_dups_and_excl(merge_file, exclusion_regexes):
 
     number_of_rules = settings["numberofrules"]
     if os.path.isfile(settings["whitelistfile"]):
-        with open(settings["whitelistfile"], "r") as ins:
+        with open(settings["whitelistfile"], "r", encoding="utf-8") as ins:
             for line in ins:
                 line = line.strip(" \t\n\r")
                 if line and not line.startswith("#"):
@@ -810,7 +812,7 @@ def write_opening_header(final_file, **header_params):
     preamble = path_join_robust(BASEDIR_PATH, "myhosts")
 
     if os.path.isfile(preamble):
-        with open(preamble, "r") as f:
+        with open(preamble, "r", encoding="utf-8") as f:
             write_data(final_file, f.read())
 
     final_file.write(file_contents)
@@ -845,11 +847,11 @@ def update_readme_data(readme_file, **readme_updates):
                        "entries": readme_updates["numberofrules"],
                        "sourcesdata": readme_updates["sourcesdata"]}
 
-    with open(readme_file, "r") as f:
+    with open(readme_file, "r", encoding="utf-8") as f:
         readme_data = json.load(f)
         readme_data[extensions_key] = generation_data
 
-    with open(readme_file, "w") as f:
+    with open(readme_file, "w", encoding="utf-8") as f:
         json.dump(readme_data, f)
 
 
@@ -970,7 +972,7 @@ def remove_old_hosts_file(backup):
     old_file_path = path_join_robust(BASEDIR_PATH, "hosts")
 
     # Create if already removed, so remove won't raise an error.
-    open(old_file_path, "a").close()
+    open(old_file_path, "a", encoding="utf-8").close()
 
     if backup:
         backup_file_path = path_join_robust(BASEDIR_PATH, "hosts-{}".format(
@@ -982,7 +984,7 @@ def remove_old_hosts_file(backup):
     os.remove(old_file_path)
 
     # Create new empty hosts file
-    open(old_file_path, "a").close()
+    open(old_file_path, "a", encoding="utf-8").close()
 # End File Logic
 
 

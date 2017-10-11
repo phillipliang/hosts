@@ -135,7 +135,7 @@ class TestPromptForUpdate(BaseStdout, BaseMockDir):
         with self.mock_property("updateHostsFile.BASEDIR_PATH"):
             updateHostsFile.BASEDIR_PATH = self.test_dir
 
-            with open(hosts_file, "w") as f:
+            with open(hosts_file, "w", encoding="utf-8") as f:
                 f.write(hosts_data)
 
         for update_auto in (False, True):
@@ -149,7 +149,7 @@ class TestPromptForUpdate(BaseStdout, BaseMockDir):
 
             self.assertEqual(self.dir_count, dir_count)
 
-            with open(hosts_file, "r") as f:
+            with open(hosts_file, "r", encoding="utf-8") as f:
                 contents = f.read()
                 self.assertEqual(contents, hosts_data)
 
@@ -169,7 +169,7 @@ class TestPromptForUpdate(BaseStdout, BaseMockDir):
 
             self.assertEqual(self.dir_count, dir_count + 1)
 
-            with open(hosts_file, "r") as f:
+            with open(hosts_file, "r", encoding="utf-8") as f:
                 contents = f.read()
                 self.assertEqual(contents, "")
 
@@ -197,7 +197,7 @@ class TestPromptForUpdate(BaseStdout, BaseMockDir):
         with self.mock_property("updateHostsFile.BASEDIR_PATH"):
             updateHostsFile.BASEDIR_PATH = self.test_dir
 
-            with open(hosts_file, "w") as f:
+            with open(hosts_file, "w", encoding="utf-8") as f:
                 f.write(hosts_data)
 
             dir_count = self.dir_count
@@ -214,7 +214,7 @@ class TestPromptForUpdate(BaseStdout, BaseMockDir):
 
             self.assertEqual(self.dir_count, dir_count)
 
-            with open(hosts_file, "r") as f:
+            with open(hosts_file, "r", encoding="utf-8") as f:
                 contents = f.read()
                 self.assertEqual(contents, hosts_data)
 
@@ -226,7 +226,7 @@ class TestPromptForUpdate(BaseStdout, BaseMockDir):
         with self.mock_property("updateHostsFile.BASEDIR_PATH"):
             updateHostsFile.BASEDIR_PATH = self.test_dir
 
-            with open(hosts_file, "w") as f:
+            with open(hosts_file, "w", encoding="utf-8") as f:
                 f.write(hosts_data)
 
             dir_count = self.dir_count
@@ -243,7 +243,7 @@ class TestPromptForUpdate(BaseStdout, BaseMockDir):
 
                 self.assertEqual(self.dir_count, dir_count)
 
-                with open(hosts_file, "r") as f:
+                with open(hosts_file, "r", encoding="utf-8") as f:
                     contents = f.read()
                     self.assertEqual(contents, hosts_data)
 
@@ -934,7 +934,7 @@ class TestWriteOpeningHeader(BaseMockDir):
 
     def test_preamble(self):
         hosts_file = os.path.join(self.test_dir, "myhosts")
-        with open(hosts_file, "w") as f:
+        with open(hosts_file, "w", encoding="utf-8") as f:
             f.write("peter-piper-picked-a-pepper")
 
         kwargs = dict(extensions="", outputsubfolder="",
@@ -992,7 +992,7 @@ class TestUpdateReadmeData(BaseMockDir):
                               self.readme_file, **bad_kwargs)
 
     def test_add_fields(self):
-        with open(self.readme_file, "w") as f:
+        with open(self.readme_file, "w", encoding="utf-8") as f:
             json.dump({"foo": "bar"}, f)
 
         kwargs = dict(extensions=None, outputsubfolder="foo",
@@ -1008,12 +1008,12 @@ class TestUpdateReadmeData(BaseMockDir):
             "foo": "bar"
         }
 
-        with open(self.readme_file, "r") as f:
+        with open(self.readme_file, "r", encoding="utf-8") as f:
             actual = json.load(f)
             self.assertEqual(actual, expected)
 
     def test_modify_fields(self):
-        with open(self.readme_file, "w") as f:
+        with open(self.readme_file, "w", encoding="utf-8") as f:
             json.dump({"base": "soprano"}, f)
 
         kwargs = dict(extensions=None, outputsubfolder="foo",
@@ -1028,12 +1028,12 @@ class TestUpdateReadmeData(BaseMockDir):
             }
         }
 
-        with open(self.readme_file, "r") as f:
+        with open(self.readme_file, "r", encoding="utf-8") as f:
             actual = json.load(f)
             self.assertEqual(actual, expected)
 
     def test_set_extensions(self):
-        with open(self.readme_file, "w") as f:
+        with open(self.readme_file, "w", encoding="utf-8") as f:
             json.dump({}, f)
 
         kwargs = dict(extensions=["com", "org"], outputsubfolder="foo",
@@ -1048,7 +1048,7 @@ class TestUpdateReadmeData(BaseMockDir):
             }
         }
 
-        with open(self.readme_file, "r") as f:
+        with open(self.readme_file, "r", encoding="utf-8") as f:
             actual = json.load(f)
             self.assertEqual(actual, expected)
 
@@ -1239,12 +1239,12 @@ class TestRemoveOldHostsFile(BaseMockDir):
             new_dir_count = old_dir_count + 1
             self.assertEqual(self.dir_count, new_dir_count)
 
-            with open(self.hosts_file, "r") as f:
+            with open(self.hosts_file, "r", encoding="utf-8") as f:
                 contents = f.read()
                 self.assertEqual(contents, "")
 
     def test_remove_hosts_file_exists(self):
-        with open(self.hosts_file, "w") as f:
+        with open(self.hosts_file, "w", encoding="utf-8") as f:
             f.write("foo")
 
         old_dir_count = self.dir_count
@@ -1256,14 +1256,14 @@ class TestRemoveOldHostsFile(BaseMockDir):
             new_dir_count = old_dir_count
             self.assertEqual(self.dir_count, new_dir_count)
 
-            with open(self.hosts_file, "r") as f:
+            with open(self.hosts_file, "r", encoding="utf-8") as f:
                 contents = f.read()
                 self.assertEqual(contents, "")
 
     @mock.patch("updateHostsFile.path_join_robust",
                 side_effect=mock_path_join_robust)
     def test_remove_hosts_file_backup(self, _):
-        with open(self.hosts_file, "w") as f:
+        with open(self.hosts_file, "w", encoding="utf-8") as f:
             f.write("foo")
 
         old_dir_count = self.dir_count
@@ -1275,13 +1275,13 @@ class TestRemoveOldHostsFile(BaseMockDir):
             new_dir_count = old_dir_count + 1
             self.assertEqual(self.dir_count, new_dir_count)
 
-            with open(self.hosts_file, "r") as f:
+            with open(self.hosts_file, "r", encoding="utf-8") as f:
                 contents = f.read()
                 self.assertEqual(contents, "")
 
             new_hosts_file = self.hosts_file + "-new"
 
-            with open(new_hosts_file, "r") as f:
+            with open(new_hosts_file, "r", encoding="utf-8") as f:
                 contents = f.read()
                 self.assertEqual(contents, "foo")
 # End File Logic

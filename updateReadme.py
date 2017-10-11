@@ -29,7 +29,7 @@ def main():
                  'hosts/master/${location}hosts) | '
                  '${fmtentries} | '
                  '[link](http://sbc.io/hosts/${location}hosts)')
-    with open(README_DATA_FILENAME, 'r') as f:
+    with open(README_DATA_FILENAME, 'r', encoding="utf-8") as f:
         data = json.load(f)
 
     if PY3:
@@ -78,8 +78,8 @@ def main():
             source_rows += t.substitute(this_row) + "\n"
 
         with open(os.path.join(data[key]["location"],
-                               README_FILENAME), "wt") as out:
-            for line in open(README_TEMPLATE):
+                               README_FILENAME), "wt", encoding="utf-8") as out:
+            for line in open(README_TEMPLATE, encoding="utf-8"):
                 line = line.replace('@GEN_DATE@', time.strftime("%B %d %Y",
                                                                 time.gmtime()))
                 line = line.replace('@EXTENSIONS@',
